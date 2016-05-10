@@ -48,6 +48,48 @@ class BilleteraTest(unittest.TestCase):
 			self.me.consumir(0,0, "")
 		self.assertEqual(saldoInicial,self.me.saldo())
 
+	# Casos de entrada Invalida
+
+	def testRecargarMontoDeTipoInvalido(self):
+		saldoInicial = self.me.saldo()
+		with self.assertRaises(ValueError) as e:
+			self.me.recargar("50",3)
+		self.assertEqual(e.exception.args[1],5)
+		self.assertEqual(self.me.saldo(),saldoInicial)
+
+
+	def testRecargarEstablecimientoEsNone(self):
+		saldoInicial = self.me.saldo()
+		with self.assertRaises(ValueError) as e:
+			self.me.recargar(40,None)
+		self.assertEqual(e.exception.args[1],7)
+		self.assertEqual(self.me.saldo(),saldoInicial)
+
+
+	def testConsumirMontoDeTipoInvalido(self):
+		self.me.recargar(50,2)
+		saldoInicial = self.me.saldo()
+		with self.assertRaises(ValueError) as e:
+			self.me.consumir("50",3,"1343")
+		self.assertEqual(e.exception.args[1],0)
+		self.assertEqual(self.me.saldo(),saldoInicial)
+
+	def testConsumirEstablicimientoEsNone(self):
+		self.me.recargar(50,2)
+		saldoInicial = self.me.saldo()
+		with self.assertRaises(ValueError) as e:
+			self.me.consumir("50",None,"1343")
+		self.assertEqual(e.exception.args[1],1)
+		self.assertEqual(self.me.saldo(),saldoInicial)
+
+	def testConsumirPinEsNone(self):
+		self.me.recargar(50,2)
+		saldoInicial = self.me.saldo()
+		with self.assertRaises(ValueError) as e:
+			self.me.consumir(40,4,None)
+		self.assertEqual(e.exception.args[1],3)
+		self.assertEqual(self.me.saldo(),saldoInicial)
+
 	#Casos Borde
 	
 	def testRecargarMontoNegativo(self):
@@ -55,14 +97,14 @@ class BilleteraTest(unittest.TestCase):
 		with self.assertRaises(ValueError) as cm:
 			self.me.recargar(-10,31)
 
-		self.assertEqual(cm.exception.args[1],3)
+		self.assertEqual(cm.exception.args[1],6)
 		self.assertEqual(self.me.saldo(),saldoInicial)
 
 	def testConsumirMontoNegativo(self):
 		self.me.recargar(50,3)
 		with self.assertRaises(ValueError) as cm:
 			self.me.consumir(-1, 31, "1343")
-		self.assertEqual(cm.exception.args[1], 0)
+		self.assertEqual(cm.exception.args[1], 2)
 		self.assertEqual(self.me.saldo(),50)
 
 	
@@ -70,7 +112,7 @@ class BilleteraTest(unittest.TestCase):
 		self.me.recargar(50,3)
 		with self.assertRaises(ValueError) as cm:
 			self.me.consumir(50, 31, "0000")
-		self.assertEqual(cm.exception.args[1], 1)
+		self.assertEqual(cm.exception.args[1], 3)
 		self.assertEqual(self.me.saldo(),50)
 
 	
@@ -78,7 +120,7 @@ class BilleteraTest(unittest.TestCase):
 		self.me.recargar(50,3)
 		with self.assertRaises(ValueError) as cm:
 			self.me.consumir(100, 31, "1343")
-		self.assertEqual(cm.exception.args[1], 2)
+		self.assertEqual(cm.exception.args[1], 4)
 		self.assertEqual(self.me.saldo(),50)
 
 	#Casos Esquina
