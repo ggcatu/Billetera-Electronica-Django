@@ -136,6 +136,11 @@ class BilleteraTest(unittest.TestCase):
 			self.me.consumir(50,31,"4333")
 
 
+	def testRecargarNumero(self):
+		self.me.recargar(50,4)
+		self.assertEqual(self.me.saldo(), 50)	
+
+
 if __name__ == "__main__":
 	unittest.main()
 		
