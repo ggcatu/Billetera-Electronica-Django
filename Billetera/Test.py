@@ -22,11 +22,23 @@ class BilleteraTest(unittest.TestCase):
 		self.me.recargar(0, -1)
 		self.assertEqual(self.me.saldo(), 0)
 	
+	# Casos Borde Consumir
 	def testConsumir(self):
 		with self.assertRaises(ValueError) as cm:
-			self.me.consumir(-1, 31, 1343)
-		self.assertEqual(cm.exception.args[0], 0)
-		
+			self.me.consumir(-1, 31, "1343")
+		self.assertEqual(cm.exception.args[1], 0)
+	
+	def testConsumir1(self):
+		with self.assertRaises(ValueError) as cm:
+			self.me.consumir(50, 31, "0000")
+		self.assertEqual(cm.exception.args[1], 1)
+	
+	def testConsumir2(self):
+		with self.assertRaises(ValueError) as cm:
+			self.me.consumir(50, 31, "1343")
+		self.assertEqual(cm.exception.args[1], 2)
+
+	
 	
 if __name__ == "__main__":
 	unittest.main()
