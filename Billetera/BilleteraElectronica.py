@@ -44,6 +44,7 @@ class BilleteraElectronica():
         return -1
     
     def __str__(self): 
-        tmp = "\n".join([str(t) for t in self.transacciones])
+        tmp = "\n".join([str(t) for t in self.consumos] + [str(t) for t in self.recargas])
+	
         return "Billetera electronica: {} {} \nMonto: {} \nTransacciones: \n{}"\
                         .format(self.nombre, self.apellido, self.__saldo, tmp)
