@@ -32,16 +32,25 @@ class BilleteraElectronica():
         return self.__saldo
 
     def recargar(self, monto,establecimiento):
-        if (monto > 0):
-            self.__saldo = self.__saldo + monto
-            self.recargas.append(Transaccion(monto, establecimiento, 0))
+        if (monto < 0):
+            raise ValueError("Monto de recarga negativo",0)
+
+        self.__saldo = self.__saldo + monto
+        self.recargas.append(Transaccion(monto, establecimiento, 0))
     
     def consumir(self, consumo, establecimiento, pin):
-        if (self.__saldo >= consumo and self.__pin == pin):
-            self.__saldo = self.__saldo - consumo
-            self.consumos.append(Transaccion(consumo, establecimiento, 1))
-            return 0
-        return -1
+        if (consumo < 0):
+            raise ValueError("Valor de consumo negativo",0)
+
+        if (self.__pin != pin):
+            raise ValueError("Pin incorrecto en consumo",1)
+
+        if (self.__saldo < consumo):
+            raise ValueError("Saldo menor al consumo",2)
+
+        self.__saldo = self.__saldo - consumo
+        self.consumos.append(Transaccion(consumo, establecimiento, 1))
+        return 1
     
     def __str__(self): 
         tmp = "\n".join([str(t) for t in self.transacciones])
