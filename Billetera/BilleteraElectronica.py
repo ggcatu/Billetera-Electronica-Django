@@ -3,7 +3,7 @@ Created on May 8, 2016
 
 @author: Gabriel
 '''
-import Transaccion
+from Transaccion import Transaccion
 
 class BilleteraElectronica():
     '''
@@ -13,10 +13,10 @@ class BilleteraElectronica():
     nombre = ""
     apellido = ""
     ci = ""
-    pin = ""
-    saldo = 0
-    transacciones = []
-
+    __pin = ""
+    __saldo = 0
+    consumos = []
+    recargas = []
 
     def __init__(self, identificador, nombre, apellido, ci, pin):
         '''
@@ -26,20 +26,24 @@ class BilleteraElectronica():
         self.nombre = nombre
         self.apellido = apellido
         self.ci = ci
-        self.pin = pin
+        self.__pin = pin
         
+    def saldo(self):
+        return self.__saldo
+
     def recargar(self, monto,establecimiento):
         if (monto > 0):
-            self.saldo = self.saldo + monto
-            self.transacciones.append(Transaccion.Transaccion(monto, establecimiento, 0))
+            self.__saldo = self.__saldo + monto
+            self.recargas.append(Transaccion(monto, establecimiento, 0))
     
     def consumir(self, consumo, establecimiento, pin):
-        if (self.saldo >= consumo and self.pin == pin):
-            self.saldo = self.saldo - consumo
-            self.transacciones.append(Transaccion.Transaccion(consumo, establecimiento, 1))
+        if (self.__saldo >= consumo and self.__pin == pin):
+            self.__saldo = self.__saldo - consumo
+            self.consumos.append(Transaccion(consumo, establecimiento, 1))
             return 0
         return -1
     
     def __str__(self): 
         tmp = "\n".join([str(t) for t in self.transacciones])
-        return "Billetera electronica: {} {} \nMonto: {} \nTransacciones: \n{}".format(self.nombre, self.apellido, self.saldo, tmp)
+        return "Billetera electronica: {} {} \nMonto: {} \nTransacciones: \n{}"\
+                        .format(self.nombre, self.apellido, self.__saldo, tmp)
