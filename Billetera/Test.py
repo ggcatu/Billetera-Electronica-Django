@@ -14,29 +14,85 @@ class BilleteraTest(unittest.TestCase):
 	def tearDown(self):
 		self.me = None
 	
-	def testRecargar(self):
+	#Casos Internos
+
+	def testSaldo(self):
+		self.me.recargar(50402,31)
+		self.assertEqual(self.me.saldo(),50402)
+
+	def testRecargarMontoValido(self):
 		self.me.recargar(50,31)
 		self.assertEqual(self.me.saldo(), 50)
 	
-	def testRecargar1(self):
+	def testConsumirValido(self):
+		self.me.recargar(50,21)
+		self.me.consumir(25,32,"1343")
+		self.assertEqual(self.me.saldo(),25)
+
+
+	#Casos Maliciosos
+
+	def testRecargarMontoIgualACero(self):
+		saldoInicial = self.me.saldo()
 		self.me.recargar(0, -1)
-		self.assertEqual(self.me.saldo(), 0)
+		self.assertEqual(self.me.saldo(), saldoInicial)
+
+	def testConsumirMontoIgualACero(self):
+		saldoInicial = self.me.saldo()
+		self.me.consumir(0,10,"1343")
+		self.assertEqual(saldoInicial,self.me.saldo())
+
+	def testConsumirPinVacio(self):
+		saldoInicial = self.me.saldo()
+		with self.assertRaises(ValueError):
+			self.me.consumir(0,0, "")
+		self.assertEqual(saldoInicial,self.me.saldo())
+
+	#Casos Borde
 	
-	# Casos Borde Consumir
-	def testConsumir(self):
+	def testRecargarMontoNegativo(self):
+		saldoInicial = self.me.saldo()
+		with self.assertRaises(ValueError) as cm:
+			self.me.recargar(-10,31)
+
+		self.assertEqual(cm.exception.args[1],3)
+		self.assertEqual(self.me.saldo(),saldoInicial)
+
+	def testConsumirMontoNegativo(self):
+		self.me.recargar(50,3)
 		with self.assertRaises(ValueError) as cm:
 			self.me.consumir(-1, 31, "1343")
 		self.assertEqual(cm.exception.args[1], 0)
+		self.assertEqual(self.me.saldo(),50)
+
 	
-	def testConsumir1(self):
+	def testConsumirPinErroneo(self):
+		self.me.recargar(50,3)
 		with self.assertRaises(ValueError) as cm:
 			self.me.consumir(50, 31, "0000")
 		self.assertEqual(cm.exception.args[1], 1)
+		self.assertEqual(self.me.saldo(),50)
+
 	
-	def testConsumir2(self):
+	def testConsumirSaldoInsuficiente(self):
+		self.me.recargar(50,3)
 		with self.assertRaises(ValueError) as cm:
-			self.me.consumir(50, 31, "1343")
+			self.me.consumir(100, 31, "1343")
 		self.assertEqual(cm.exception.args[1], 2)
+		self.assertEqual(self.me.saldo(),50)
+
+	#Casos Esquina
+
+	def testConsumirPinErroneoMontoNegativo(self):
+		self.me.recargar(50,3)
+		with self.assertRaises(ValueError) as cm:
+			self.me.consumir(-1, 31, "0023")
+		self.assertEqual(self.me.saldo(),50)
+
+	def testConsumirSaldoInsuficientePinErroneo(self):
+		with self.assertRaises(ValueError):
+			self.me.consumir(50,31,"4333")
+
 
 	def testRecargarNumero(self):
 		self.me.recargar(50,4)
