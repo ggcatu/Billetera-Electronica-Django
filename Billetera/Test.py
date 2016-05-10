@@ -24,11 +24,20 @@ class BilleteraTest(unittest.TestCase):
 		self.me.recargar(50,31)
 		self.assertEqual(self.me.saldo(), 50)
 	
+	def testRecargarNumerosAltos(self):
+		self.me.recargar(50323333333333333333333333333332.54232355,4)
+		self.assertEqual(self.me.saldo(),50323333333333333333333333333332.54232355)
+
 	def testConsumirValido(self):
 		self.me.recargar(50,21)
 		self.me.consumir(25,32,"1343")
 		self.assertEqual(self.me.saldo(),25)
 
+	def testConsumirNumerosAltos(self):
+		self.assertEqual(self.me.saldo(),0)
+		self.me.recargar(50000000000000000000000000000000000000000000,32)
+		self.me.consumir(45555555553434233333333333.4323334,42,"1343")
+		self.assertEqual(self.me.saldo(),50000000000000000000000000000000000000000000 -45555555553434233333333333.4323334)
 
 	#Casos Maliciosos
 
@@ -78,7 +87,7 @@ class BilleteraTest(unittest.TestCase):
 		self.me.recargar(50,2)
 		saldoInicial = self.me.saldo()
 		with self.assertRaises(ValueError) as e:
-			self.me.consumir("50",None,"1343")
+			self.me.consumir(50,None,"1343")
 		self.assertEqual(e.exception.args[1],1)
 		self.assertEqual(self.me.saldo(),saldoInicial)
 
