@@ -27,6 +27,7 @@ class BilleteraTest(unittest.TestCase):
 		with self.assertRaises(ValueError) as cm:
 			self.me.consumir(-1, 31, "1343")
 		self.assertEqual(cm.exception.args[1], 0)
+<<<<<<< HEAD
 	
 	def testConsumir1(self):
 		with self.assertRaises(ValueError) as cm:
@@ -39,6 +40,9 @@ class BilleteraTest(unittest.TestCase):
 		self.assertEqual(cm.exception.args[1], 2)
 
 	
+=======
+		
+>>>>>>> e54afd227354cbb376d97f4f551de553fbc8baf2
 	
 if __name__ == "__main__":
 	unittest.main()
