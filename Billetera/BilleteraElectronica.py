@@ -32,14 +32,20 @@ class BilleteraElectronica():
 		return self.__saldo
 	
 	def consumir(self, consumo, establecimiento, pin):
-		if (consumo < 0):
-			raise ValueError("Valor de consumo negativo",0)
+		if type(consumo) not in (int, float):
+			raise ValueError("Monto de consumo invalido",0)
 
-		if (self.__pin != pin):
-			raise ValueError("Pin incorrecto en consumo",1)
+		if establecimiento is None:
+			raise ValueError("Establecimiento nulo en recarga",1)
+		
+		if (consumo < 0):
+			raise ValueError("Valor de consumo negativo",2)
+
+		if (pin is None or self.__pin != pin):
+			raise ValueError("Pin incorrecto en consumo",3)
 
 		if (self.__saldo < consumo):
-			raise ValueError("Saldo menor al consumo",2)
+			raise ValueError("Saldo menor al consumo",4)
 
 		self.__saldo = self.__saldo - consumo
 		self.consumos.append(Transaccion(consumo, establecimiento, 1))
@@ -47,9 +53,14 @@ class BilleteraElectronica():
 
 
 	def recargar(self, monto,establecimiento):
+		if type(monto) not in (int, float):
+			raise ValueError("Monto de recarga invalido",5)
 		if (monto < 0):
-			raise ValueError("Monto de recarga negativo",3)
-			
+			raise ValueError("Monto de recarga negativo",6)
+		if establecimiento is None:
+			raise ValueError("Establecimiento nulo en recarga",7)
+
+	
 		self.__saldo = self.__saldo + monto
 		self.recargas.append(Transaccion(monto, establecimiento, 0))
 
