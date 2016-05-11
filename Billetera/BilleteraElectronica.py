@@ -25,6 +25,10 @@ class BilleteraElectronica():
 		self.__consumos = []
 		self.__recargas = []
 
+		# Nos aseguramos que la precision de decimal sea suficientemente alta.
+		getcontext().prec = 40
+
+
 	def saldo(self):
 		return Decimal(self.__saldo)
 	
@@ -44,8 +48,6 @@ class BilleteraElectronica():
 		if (self.__saldo < consumo):
 			raise ValueError("Saldo menor al consumo",4)
 
-		# Nos aseguramos que la precision de decimal sea suficientemente alta.
-		getcontext().prec = 40
 
 
 		self.__saldo = self.__saldo - consumo
@@ -61,9 +63,6 @@ class BilleteraElectronica():
 		if establecimiento is None:
 			raise ValueError("Establecimiento nulo en recarga",7)
 
-
-		# Nos aseguramos que la precision de decimal sea suficientemente alta.
-		getcontext().prec = 40
 
 		self.__saldo = Decimal(self.__saldo) + Decimal(monto)
 		self.__recargas.append(Transaccion(monto, establecimiento, 0))
