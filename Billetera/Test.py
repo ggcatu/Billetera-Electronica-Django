@@ -1,3 +1,10 @@
+'''
+Created on May 10, 2016
+
+@author: Gabriel
+@author: Erick
+'''
+
 from BilleteraElectronica import BilleteraElectronica
 from decimal import *
 import unittest
