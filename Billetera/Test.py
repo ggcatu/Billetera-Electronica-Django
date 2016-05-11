@@ -42,6 +42,16 @@ class BilleteraTest(unittest.TestCase):
 
 	#Casos Maliciosos
 
+	def testRecargarDecimales(self):
+		self.me.recargar(Decimal('0.000001'),44)
+		self.assertEqual(self.me.saldo(),Decimal('0.000001'))
+
+
+	def testConsumirDecimales(self):
+		self.me.recargar(Decimal('0.000001'),44)
+		self.me.consumir(Decimal('0.0000001'),43,"1343")
+		self.assertEqual(self.me.saldo(),Decimal('0.000001') - Decimal('0.0000001'))
+
 	def testRecargarMontoIgualACero(self):
 		saldoInicial = self.me.saldo()
 		self.me.recargar(Decimal(0), -1)
