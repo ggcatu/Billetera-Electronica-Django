@@ -16,7 +16,7 @@ class Transaccion(object):
 		'''
 		Constructor
 		'''
-		fecha = datetime.today()
+		self.fecha = datetime.today()
 		self.monto = monto
 		self.id_establecimiento = id_establecimiento
 		self.tipo = tipo
