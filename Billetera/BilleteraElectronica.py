@@ -2,6 +2,7 @@
 Created on May 8, 2016
 
 @author: Gabriel
+@author: Erick
 '''
 
 from Transaccion import Transaccion
